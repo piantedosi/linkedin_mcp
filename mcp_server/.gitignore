@@ -1,0 +1,7 @@
+.env
+_pycache__
+.browser_profile/
+!.browser_profile/.gitkeep
+jobs_extracted/
+jobs_interesting/
+jobs_minhash.jsonl

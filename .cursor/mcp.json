@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "linkedin-jobs": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "mcp[cli]>=1.2,<2",
+        "--with",
+        "playwright>=1.40",
+        "python",
+        "${workspaceFolder}/mcp_server/server.py"
+      ],
+      "envFile": "${workspaceFolder}/mcp_server/.env",
+      "env": {
+        "LINKEDIN_PROFILE_DIR": "${workspaceFolder}/mcp_server/.browser_profile"
+      }
+    }
+  }
+}
