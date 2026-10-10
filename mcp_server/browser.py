@@ -12,14 +12,16 @@ from __future__ import annotations
 
 import asyncio
 import html
-import importlib.util
 import os
 import random
 import re
+import unicodedata
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SERVER_DIR = Path(__file__).resolve().parent
+os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH", str(SERVER_DIR / ".playwright"))
 HTML_LIMIT = 80_000
 DESCRIPTION_LIMIT = 50_000
 PAUSE_MIN_SECONDS = 2.0
@@ -169,20 +171,18 @@ def profile_dir() -> Path:
     raw = os.environ.get("LINKEDIN_PROFILE_DIR", "").strip()
     if raw:
         return Path(raw)
-    return REPO_ROOT / "linkedin_mcp" / ".browser_profile"
+    return SERVER_DIR / ".browser_profile"
 
 
-def load_normalize_slug():
-    path = REPO_ROOT / "cv_test" / "python_utils" / "cv_slug.py"
-    spec = importlib.util.spec_from_file_location("cv_slug_for_linkedin", path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Cannot load slug helper at {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.normalize_slug
-
-
-normalize_slug = load_normalize_slug()
+def normalize_slug(value: str) -> str:
+    """Same rules as cv_test/python_utils/cv_slug.py: CamelCase split, accents removed."""
+    value = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", value)
+    value = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", value)
+    value = unicodedata.normalize("NFKD", value)
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    value = value.lower()
+    value = re.sub(r"[^a-z0-9]+", "_", value).strip("_")
+    return value or "cv"
 
 
 def posting_stem(company: str, title: str) -> str:
