@@ -2,19 +2,14 @@
   "mcpServers": {
     "linkedin-jobs": {
       "type": "stdio",
-      "command": "uv",
+      "command": "bash",
       "args": [
-        "run",
-        "--with",
-        "mcp[cli]>=1.2,<2",
-        "--with",
-        "playwright>=1.40",
-        "python",
-        "${workspaceFolder}/mcp_server/server.py"
+        "${workspaceFolder}/mcp_server/run.sh"
       ],
       "envFile": "${workspaceFolder}/mcp_server/.env",
       "env": {
-        "LINKEDIN_PROFILE_DIR": "${workspaceFolder}/mcp_server/.browser_profile"
+        "LINKEDIN_PROFILE_DIR": "${workspaceFolder}/mcp_server/.browser_profile",
+        "PLAYWRIGHT_BROWSERS_PATH": "${workspaceFolder}/mcp_server/.playwright"
       }
     }
   }

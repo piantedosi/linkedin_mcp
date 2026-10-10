@@ -1,7 +1,9 @@
 .env
-_pycache__
-.browser_profile/
-!.browser_profile/.gitkeep
-jobs_extracted/
-jobs_interesting/
+__pycache__/*
+.browser_profile/*
+.playwright/*
+jobs_extracted/*
+jobs_interesting/*
 jobs_minhash.jsonl
+*/__pycache__/*
+*.pyc
